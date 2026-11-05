@@ -1,0 +1,162 @@
+from pathlib import Path
+
+html = r'''<!DOCTYPE html>
+<html lang="hi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#f26b21">
+  <meta name="description" content="ANJALI JALPAN, Wazidpur Maurya Market, Jaunpur. Order samosa, chai, bread pakoda and chole samosa online.">
+  <title>ANJALI JALPAN | Online Food Order</title>
+  <style>
+    :root{--orange:#f26b21;--dark:#25211e;--cream:#fff8ef;--muted:#766e67;--green:#16834a}
+    *{box-sizing:border-box} body{margin:0;font-family:Arial,"Noto Sans Devanagari",sans-serif;background:#fff;color:var(--dark)}
+    header{background:linear-gradient(120deg,#2a211b,#58351f);color:white;padding:22px 18px 30px}
+    .wrap{max-width:1080px;margin:auto}.top{display:flex;justify-content:space-between;align-items:center;gap:12px}
+    .brand{font-size:23px;font-weight:900;letter-spacing:1px}.tag{font-size:12px;color:#ffe0c7;margin-top:5px}
+    .pill{border:1px solid #ffffff55;border-radius:30px;padding:8px 12px;font-size:12px}
+    .hero{padding:28px 0 4px}.hero h1{font-size:clamp(27px,5vw,43px);line-height:1.12;margin:0 0 10px}
+    .hero p{color:#f5dfd0;max-width:580px;line-height:1.6;margin:0}
+    .hero .cta{display:inline-block;background:var(--orange);color:white;text-decoration:none;padding:12px 18px;border-radius:12px;font-weight:bold;margin-top:17px}
+    main{max-width:1080px;margin:auto;padding:24px 16px 60px}
+    .section-head{display:flex;justify-content:space-between;align-items:end;gap:12px;margin-bottom:16px}
+    h2{margin:0;font-size:23px}.small{font-size:13px;color:var(--muted);line-height:1.5}
+    .menu{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px}
+    .item{border:1px solid #eee2d8;border-radius:17px;overflow:hidden;background:white;box-shadow:0 5px 18px #4a2b1010}
+    .foodpic{height:130px;display:grid;place-items:center;background:linear-gradient(135deg,#fff0df,#ffe0bf);font-size:58px}
+    .itembody{padding:14px}.item h3{margin:0 0 5px;font-size:17px}.price{font-size:19px;font-weight:800;color:var(--orange)}
+    .desc{font-size:12px;color:var(--muted);min-height:30px;margin:5px 0 12px}
+    button{border:0;cursor:pointer;font-weight:700}.add{width:100%;background:var(--orange);color:white;padding:11px;border-radius:10px}
+    .cartbox{margin-top:28px;background:var(--cream);border:1px solid #f4dfcb;border-radius:18px;padding:18px}
+    .cartrow{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid #ead9c8}
+    .qty{display:flex;align-items:center;gap:10px}.qty button{width:28px;height:28px;border-radius:8px;background:#ffe1c9;color:#81360c;font-size:18px}
+    .total{display:flex;justify-content:space-between;font-size:20px;font-weight:900;padding:16px 0}
+    .checkout{margin-top:22px;display:grid;grid-template-columns:1fr 1fr;gap:12px}
+    label{display:block;font-size:13px;font-weight:700;margin-bottom:6px}
+    input,select,textarea{width:100%;padding:12px;border:1px solid #dfd2c8;border-radius:10px;font:inherit;background:white}
+    textarea{min-height:78px;resize:vertical}.full{grid-column:1/-1}
+    .choice{display:flex;gap:14px;flex-wrap:wrap;padding:8px 0}.choice label{font-weight:500;display:flex;gap:6px;align-items:center}
+    .choice input{width:auto}
+    .orderbtn{width:100%;background:var(--green);color:white;border-radius:12px;padding:15px;font-size:16px;margin-top:14px}
+    .note{font-size:12px;color:var(--muted);line-height:1.55;margin-top:10px}
+    footer{background:#241d18;color:#e9d9cd;padding:24px 16px;text-align:center;font-size:13px;line-height:1.8}
+    .empty{color:var(--muted);padding:8px 0}.hidden{display:none}
+    @media(max-width:620px){.checkout{grid-template-columns:1fr}.full{grid-column:auto}.top{align-items:flex-start}.pill{font-size:11px}.hero{padding-top:23px}}
+  </style>
+</head>
+<body>
+<header>
+  <div class="wrap">
+    <div class="top">
+      <div><div class="brand">🥟 ANJALI JALPAN</div><div class="tag">स्वाद जो याद रह जाए!</div></div>
+      <div class="pill">📍 Wazidpur, Jaunpur</div>
+    </div>
+    <div class="hero">
+      <h1>गरमा-गरम नाश्ता,<br>अब ऑनलाइन ऑर्डर करें।</h1>
+      <p>समोसा, चाय, ब्रेड पकौड़ा और छोले समोसे का स्वाद — ANJALI JALPAN, Maurya Market, Wazidpur, Jaunpur.</p>
+      <a class="cta" href="#menu">मेन्यू देखें ↓</a>
+    </div>
+  </div>
+</header>
+
+<main>
+  <section id="menu">
+    <div class="section-head"><div><h2>हमारा मेन्यू</h2><div class="small">अपनी पसंद की चीज़ें कार्ट में जोड़ें।</div></div><div class="small">ताज़ा • स्वादिष्ट • किफायती</div></div>
+    <div class="menu" id="menuGrid"></div>
+  </section>
+
+  <section class="cartbox" id="cart">
+    <h2>🛒 आपका कार्ट</h2>
+    <div id="cartItems" class="small" style="margin-top:10px"></div>
+    <div class="total"><span>कुल बिल</span><span id="total">₹0</span></div>
+    <div class="small">डिलीवरी चार्ज और उपलब्धता ऑर्डर की पुष्टि करते समय WhatsApp पर बताई जाएगी।</div>
+
+    <h2 style="margin-top:22px">ऑर्डर की जानकारी</h2>
+    <div class="checkout">
+      <div><label for="custName">आपका नाम *</label><input id="custName" placeholder="अपना नाम लिखें"></div>
+      <div><label for="custPhone">मोबाइल नंबर *</label><input id="custPhone" inputmode="numeric" maxlength="10" placeholder="10 अंकों का नंबर"></div>
+      <div class="full"><label>ऑर्डर का तरीका *</label><div class="choice">
+        <label><input type="radio" name="fulfil" value="Delivery" checked> घर पर डिलीवरी</label>
+        <label><input type="radio" name="fulfil" value="Pickup"> दुकान से Pickup</label>
+      </div></div>
+      <div class="full" id="addressWrap"><label for="address">पूरा डिलीवरी पता *</label><textarea id="address" placeholder="मोहल्ला, मकान नंबर और पहचान की जगह"></textarea></div>
+      <div class="full"><label>पेमेंट का तरीका *</label><div class="choice">
+        <label><input type="radio" name="payment" value="Cash" checked> Cash</label>
+        <label><input type="radio" name="payment" value="UPI"> UPI</label>
+      </div></div>
+      <div class="full"><label for="notes">कोई खास निर्देश (वैकल्पिक)</label><textarea id="notes" placeholder="जैसे कम तीखा, जल्दी भेजें आदि"></textarea></div>
+    </div>
+    <button class="orderbtn" onclick="sendOrder()">WhatsApp पर ऑर्डर भेजें</button>
+    <div class="note">ध्यान दें: UPI चुनने पर दुकान से भुगतान की जानकारी/QR की पुष्टि लें। यह वेबसाइट अभी पेमेंट अपने आप नहीं काटती। ऑर्डर भेजने के बाद दुकान से पुष्टि का इंतज़ार करें।</div>
+  </section>
+</main>
+<footer>
+  <strong>ANJALI JALPAN</strong><br>
+  Maurya Market, Wazidpur, Jaunpur, Uttar Pradesh<br>
+  WhatsApp / Order: 7275603793<br>
+  © 2026 ANJALI JALPAN
+</footer>
+
+<script>
+const SHOP_WHATSAPP = "917275603793"; // WhatsApp international format: 91 + 10-digit number
+const products = [
+  {id:"samosa",name:"समोसा",price:7,emoji:"🥟",desc:"कुरकुरा और स्वादिष्ट • प्रति पीस"},
+  {id:"chai",name:"छोटी चाय",price:6,emoji:"☕",desc:"गरमा-गरम चाय"},
+  {id:"bigchai",name:"बड़ी चाय",price:10,emoji:"🍵",desc:"बड़ी कप वाली चाय"},
+  {id:"cholesamosa",name:"छोले समोसा",price:15,emoji:"🥘",desc:"मज़ेदार छोले के साथ"},
+  {id:"fullplate",name:"फुल प्लेट छोले समोसा",price:25,emoji:"🍽️",desc:"भरपूर स्वाद वाली फुल प्लेट"},
+  {id:"breadpakora",name:"ब्रेड पकौड़ा",price:15,emoji:"🍞",desc:"गरमा-गरम • प्रति पीस"}
+];
+const cart = {};
+const rupees = n => "₹" + n;
+function renderMenu(){
+  document.getElementById("menuGrid").innerHTML = products.map(p=>`
+    <article class="item"><div class="foodpic" aria-hidden="true">${p.emoji}</div>
+    <div class="itembody"><h3>${p.name}</h3><div class="price">${rupees(p.price)}</div>
+    <div class="desc">${p.desc}</div><button class="add" onclick="changeQty('${p.id}',1)">+ कार्ट में जोड़ें</button></div></article>`).join("");
+}
+function changeQty(id,delta){cart[id]=(cart[id]||0)+delta;if(cart[id]<=0)delete cart[id];renderCart();}
+function renderCart(){
+  const chosen=products.filter(p=>cart[p.id]);
+  document.getElementById("cartItems").innerHTML=chosen.length?chosen.map(p=>`
+    <div class="cartrow"><div><strong>${p.name}</strong><div class="small">${rupees(p.price)} × ${cart[p.id]}</div></div>
+    <div class="qty"><button onclick="changeQty('${p.id}',-1)">−</button><strong>${cart[p.id]}</strong><button onclick="changeQty('${p.id}',1)">+</button><strong>${rupees(p.price*cart[p.id])}</strong></div></div>`).join(""):'<div class="empty">आपका कार्ट खाली है। पहले मेन्यू से सामान जोड़ें।</div>';
+  document.getElementById("total").textContent=rupees(chosen.reduce((s,p)=>s+p.price*cart[p.id],0));
+}
+document.querySelectorAll('input[name="fulfil"]').forEach(el=>el.addEventListener("change",()=>{
+  document.getElementById("addressWrap").classList.toggle("hidden",document.querySelector('input[name="fulfil"]:checked').value==="Pickup");
+}));
+function sendOrder(){
+  const chosen=products.filter(p=>cart[p.id]);
+  if(!chosen.length){alert("कृपया पहले मेन्यू से कोई सामान कार्ट में जोड़ें।");return;}
+  const name=document.getElementById("custName").value.trim();
+  const phone=document.getElementById("custPhone").value.trim();
+  const fulfil=document.querySelector('input[name="fulfil"]:checked').value;
+  const payment=document.querySelector('input[name="payment"]:checked').value;
+  const address=document.getElementById("address").value.trim();
+  const notes=document.getElementById("notes").value.trim();
+  if(!name){alert("कृपया अपना नाम लिखें।");return;}
+  if(!/^[6-9]\d{9}$/.test(phone)){alert("कृपया सही 10 अंकों का मोबाइल नंबर लिखें।");return;}
+  if(fulfil==="Delivery"&&!address){alert("डिलीवरी के लिए पूरा पता लिखें।");return;}
+  const lines=chosen.map(p=>`${p.name} × ${cart[p.id]} = ${rupees(p.price*cart[p.id])}`);
+  const total=chosen.reduce((s,p)=>s+p.price*cart[p.id],0);
+  const msg=[
+    "🍽️ *नया ऑर्डर – ANJALI JALPAN*","",
+    ...lines,"","*कुल सामान का बिल: "+rupees(total)+"*",
+    "डिलीवरी चार्ज: दुकान पुष्टि करेगी","",
+    "ग्राहक: "+name,"मोबाइल: "+phone,"ऑर्डर: "+(fulfil==="Delivery"?"Home Delivery":"Store Pickup"),
+    ...(fulfil==="Delivery"?["पता: "+address]:[]),
+    "पेमेंट: "+payment,
+    ...(notes?["निर्देश: "+notes]:[]),
+    "","कृपया ऑर्डर की उपलब्धता और कुल भुगतान की पुष्टि करें।"
+  ].join("\n");
+  window.open("https://wa.me/"+SHOP_WHATSAPP+"?text="+encodeURIComponent(msg),"_blank");
+}
+renderMenu();renderCart();
+</script>
+</body>
+</html>'''
+
+path = Path("/mnt/data/anjali_jalpan_website.html")
+path.write_text(html, encoding="utf-8")
+print(f"Created: {path} ({path.stat().st_size} bytes)")
